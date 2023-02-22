@@ -6,7 +6,7 @@ from trainer.frep_eq import FRepEqTrainerBuilder
 
 from trainer.sipm import sIPMTrainerBuilder
 from trainer.cfair_laftr import CfairLaftrTrainerBuilder
-# from trainer.mmd_classifier import MMDClassifierBuilder
+from trainer.mmd_classifier import MMDClassifierBuilder
 
 # from trainer.dp_9 import DP9TrainerBuilder
 # from trainer.eq_9 import Eq9TrainerBuilder
@@ -56,4 +56,4 @@ factory.register_builder("frep-eq", FRepEqTrainerBuilder())
 # # other methods
 factory.register_builder("sipm", sIPMTrainerBuilder())
 factory.register_builder("cfair-laftr", CfairLaftrTrainerBuilder())
-# factory.register_builder("mmd-classifier", MMDClassifierBuilder())
+factory.register_builder("mmd-classifier", MMDClassifierBuilder())
