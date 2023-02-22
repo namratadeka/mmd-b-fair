@@ -1,0 +1,70 @@
+experiment:
+  description: dp-rep compas
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/dp/compas/
+  load: null
+
+data:
+  data_key: compas
+  args:
+    train: /home/dnamrata/scratch/data/compas/compas_train.csv
+    val: /home/dnamrata/scratch/data/compas/compas_val.csv
+    test: /home/dnamrata/scratch/data/compas/compas_test.csv
+    batch_size: 64
+    factors: 
+      - race
+      - result
+    factor_values:
+      - [0, 1]
+      - [0, 1]
+    value_fractions:
+      - [1, 1]
+      - [1, 1]
+  num_workers: 16
+
+model:
+  model_key: fair_rep_cls
+  trainer_key: frep-dp
+  fX:
+    race: -1
+    result: 1
+  kernel: gaussian
+  sigma_range: [0.1, 0.5]
+  modes:
+    - train
+    - val
+  epochs: 100
+  alpha: 0.05
+  cls_coeff: 1
+  lamda_t: 1
+  lamda_s: 100
+  var_offset: 0.000001
+  unbiased_variance: False
+  n_permutations: 100
+
+  network:
+    fc:
+      - Linear:
+          in_features: 11
+          out_features: 8
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 8
+          out_features: 8
+    classifier:
+      - Linear:
+          in_features: 8
+          out_features: 8
+      - LeakyReLU:
+          inplace: True  
+      - Linear:
+          in_features: 8
+          out_features: 2  
+
+  optimizers:
+    ft:
+      Adadelta:
+        lr: 2
+        weight_decay: 0.0
+  
+  scheduler: null

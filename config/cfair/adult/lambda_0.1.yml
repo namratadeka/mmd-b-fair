@@ -1,0 +1,74 @@
+experiment:
+  description: cfair adult
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/cfair/adult/
+  load: null
+
+data:
+  data_key: adult-cls
+  args:
+    train: null
+    val: null
+    test: null
+    train_path: /home/dnamrata/scratch/data/adult/adult.data
+    test_path: /home/dnamrata/scratch/data/adult/adult.test
+    batch_size: 64
+    tar_attr: income
+    priv_attr: sex
+    clr_ratio: null
+  num_workers: 16
+
+model:
+  data_key: adult-cls
+  model_key: cfair
+  trainer_key: cfair-laftr
+  num_classes: 2
+  s_cls: false
+  mu: 0.1
+  modes:
+    - train
+    - val
+  epochs: 500
+  finetune: false
+
+  encoder_fc:
+    - Linear:
+        in_features: 114
+        out_features: 256
+    - LeakyReLU:
+        inplace: True
+    - Linear:
+        in_features: 256
+        out_features: 128
+    - LeakyReLU:
+        inplace: True
+    - Linear:
+        in_features: 128
+        out_features: 64
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 64
+        out_features: 32
+    - LeakyReLU:
+        inplace: True
+    - Linear:
+        in_features: 32
+        out_features: 16
+
+  classifier:
+    - Linear:
+        in_features: 16
+        out_features: 2  
+
+  discriminator:
+    - Linear:
+        in_features: 16
+        out_features: 2   
+
+  optimizers:
+    opt:
+      Adam:
+        lr: 0.0001
+        weight_decay: 0.0001
+  
+  scheduler: null

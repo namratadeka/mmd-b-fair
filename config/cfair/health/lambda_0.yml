@@ -1,0 +1,73 @@
+experiment:
+  description: cfair health
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/cfair/health/
+  load: null
+  resume: false
+
+data:
+  data_key: heritage-cls
+  args:
+    train: /home/dnamrata/scratch/data/heritage-health/train_charlson.csv
+    val: /home/dnamrata/scratch/data/heritage-health/val_charlson.csv
+    batch_size: 64
+    target: CharlsonIndex_avg
+    sensitive: AgeAtFirstClaim
+    og_target: CharlsonIndex_avg
+    train_path: /home/dnamrata/scratch/data/heritage-health/train_charlson.csv
+  num_workers: 16
+
+model:
+  data_key: heritage-cls
+  model_key: cfair
+  trainer_key: cfair-laftr
+  num_classes: 2
+  s_cls: false
+  mu: 0
+  modes:
+    - train
+    - val
+  epochs: 500
+  finetune: false
+
+  encoder_fc:
+    - Linear:
+        in_features: 65
+        out_features: 128
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 128
+        out_features: 64
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 64
+        out_features: 16
+
+  classifier:
+    - Linear:
+        in_features: 16
+        out_features: 16
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 16
+        out_features: 2 
+
+  discriminator:
+    - Linear:
+        in_features: 16
+        out_features: 16
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 16
+        out_features: 2  
+
+  optimizers:
+    opt:
+      Adam:
+        lr: 0.0001
+        weight_decay: 0.0001
+  
+  scheduler: null

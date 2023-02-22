@@ -1,0 +1,83 @@
+experiment:
+  description: sIPM on adult
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/sipm/adult/
+  load: null
+
+data:
+  data_key: adult-cls
+  args:
+    train: null
+    val: null
+    test: null
+    train_path: /home/dnamrata/scratch/data/adult/adult.data
+    test_path: /home/dnamrata/scratch/data/adult/adult.test
+    batch_size: 64
+    tar_attr: income
+    priv_attr: sex
+    clr_ratio: null
+  num_workers: 16
+
+model:
+  model_key: sipm
+  trainer_key: sipm
+  modes:
+    - train
+    - val
+  epochs: 100
+  aud_steps: 2
+  lmda: 1
+  lmdaR: 0
+  lmdaF: 0.1
+  s_cls: False
+
+  network:
+    encoder_fc:
+      - Linear:
+          in_features: 114
+          out_features: 256
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 256
+          out_features: 128
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 128
+          out_features: 64 
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 64
+          out_features: 32   
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 32
+          out_features: 16 
+
+    head:
+      - Linear:
+          in_features: 16
+          out_features: 1
+        activation: Sigmoid
+
+    decoder:
+      - Identity:
+          args: unused
+
+    aud:
+      - Linear:
+          in_features: 16
+          out_features: 1
+        activation: Sigmoid
+
+
+  optimizers:
+    opt:
+      Adam:
+        lr: 0.0001
+        weight_decay: 0.0001
+    fair_opt:
+      Adam:
+        lr: 0.0001

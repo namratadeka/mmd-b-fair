@@ -1,0 +1,88 @@
+experiment:
+  description: eq-rep adult
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/eq_t0/adult/
+  load: null
+
+data:
+  data_key: adult-cond
+  args:
+    train: null
+    val: null
+    test: null
+    train_path: /home/dnamrata/scratch/data/adult/adult.data
+    test_path: /home/dnamrata/scratch/data/adult/adult.test
+    batch_size: 64
+    sensitive: sex
+    clr_ratio: null
+    factors: 
+      - sex
+      - income
+    factor_values:
+      - [0, 1]
+      - [0, 1]
+    value_fractions:
+      - [1, 1]
+      - [1, 1]
+    c_factor: income
+    c_factor_values:
+      - [[0, 1], [0, 1]]
+      - [[0], [1]]
+  num_workers: 16
+
+model:
+  model_key: fair_rep_cls
+  trainer_key: frep-eq
+  fX:
+    sex: -1
+    income: 1
+  kernel: gaussian
+  sigma_range: [0.1, 0.5]
+  modes:
+    - train
+    - val
+  epochs: 100
+  alpha: 0.05
+  cls_coeff: 1
+  lamda_t: 0
+  lamda_s: 100
+  var_offset: 0.000001
+  unbiased_variance: False
+  n_permutations: 100
+
+  network:
+    fc:
+      - Linear:
+          in_features: 114
+          out_features: 256
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 256
+          out_features: 128
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 128
+          out_features: 64 
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 64
+          out_features: 32   
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 32
+          out_features: 16  
+    classifier:
+      - Linear:
+          in_features: 16
+          out_features: 2  
+
+  optimizers:
+    ft:
+      Adam:
+        lr: 0.0001
+        weight_decay: 0.0001
+  
+  scheduler: null

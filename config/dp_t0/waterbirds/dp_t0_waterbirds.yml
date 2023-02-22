@@ -1,0 +1,45 @@
+experiment:
+  description: frep-dp waterbirds test
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/dp_t0/waterbirds/
+  load: null
+  resume: false
+
+data:
+  data_key: waterbirds-cls
+  args:
+    train: /home/dnamrata/scratch/data/waterbirds/waterbird_complete95_forest2water2
+    val: /home/dnamrata/scratch/data/waterbirds/waterbird_complete95_forest2water2
+    test: /home/dnamrata/scratch/data/waterbirds/waterbird_complete95_forest2water2
+    batch_size: 16
+  num_workers: 16
+
+model:
+  model_key: classifier
+  trainer_key: classifier
+  modes:
+    - test
+  epochs: 0
+  finetune: false
+  scls: false
+
+  network:
+    featurizer: resnet50
+    fc:
+      - Linear:
+          in_features: 2048
+          out_features: 64
+      - LeakyReLU:
+          inplace: True
+    classifier:
+      - Linear:
+          in_features: 64
+          out_features: 2 
+
+  optimizers:
+    cls:
+      Adam:
+        lr: 0.001
+        # momentum: 0.9
+        weight_decay: 0.0001
+  
+  scheduler: null

@@ -1,0 +1,61 @@
+experiment:
+  description: laftr adult scls
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/laftr/adult/scls/
+  load: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/laftr/adult/lambda_1/*/best.pth
+
+data:
+  data_key: adult-cls
+  args:
+    train: null
+    val: null
+    test: null
+    train_path: /home/dnamrata/scratch/data/adult/adult.data
+    test_path: /home/dnamrata/scratch/data/adult/adult.test
+    batch_size: 64
+    tar_attr: income
+    priv_attr: sex
+    clr_ratio: null
+  num_workers: 16
+
+model:
+  data_key: adult-cls
+  model_key: laftr
+  trainer_key: cfair-laftr
+  num_classes: 2
+  num_groups: 2
+  s_cls: true
+  mu: 0
+  modes:
+    - train
+    - val
+  epochs: 100
+
+  encoder_fc:
+    - Linear:
+        in_features: 114
+        out_features: 60
+    - ReLU:
+        inplace: True
+
+  classifier:
+    - Linear:
+        in_features: 60
+        out_features: 2  
+
+  discriminator:
+    - Linear:
+        in_features: 60
+        out_features: 50
+    - ReLU:
+        inplace: true
+    - Linear:
+        in_features: 50
+        out_features: 1   
+
+  optimizers:
+    opt:
+      Adam:
+        lr: 0.0001
+        weight_decay: 0.0
+  
+  scheduler: null

@@ -1,0 +1,74 @@
+experiment:
+  description: sIPM on compas
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/sipm/compas/
+  load: null
+
+data:
+  data_key: compas-cls
+  args:
+    train: /home/dnamrata/scratch/data/compas/compas_train.csv
+    val: /home/dnamrata/scratch/data/compas/compas_val.csv
+    test: /home/dnamrata/scratch/data/compas/compas_test.csv
+    batch_size: 64
+    target: result
+    sensitive: race
+  num_workers: 16
+
+model:
+  model_key: sipm
+  trainer_key: sipm
+  modes:
+    - test
+  epochs: 0
+  aud_steps: 2
+  lmda: 1
+  lmdaR: 0
+  lmdaF: 0
+  s_cls: False
+
+  network:
+    encoder_fc:
+      - Linear:
+          in_features: 11
+          out_features: 8
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 8
+          out_features: 8
+
+    head:
+      - Linear:
+          in_features: 8
+          out_features: 8
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 8
+          out_features: 1
+        activation: Sigmoid
+
+    decoder:
+      - Identity:
+          args: unused
+
+    aud:
+      - Linear:
+          in_features: 8
+          out_features: 8
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 8
+          out_features: 1
+        activation: Sigmoid
+
+
+  optimizers:
+    opt:
+      Adadelta:
+        lr: 2
+        weight_decay: 0.0
+    fair_opt:
+      Adadelta:
+        lr: 2

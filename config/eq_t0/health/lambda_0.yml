@@ -1,0 +1,84 @@
+experiment:
+  description: frep-eq health
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/eq_t0/health/
+  load: null
+
+data:
+  data_key: heritage
+  args:
+    train: /home/dnamrata/scratch/data/heritage-health/train_charlson.csv
+    val: /home/dnamrata/scratch/data/heritage-health/val_charlson.csv
+    batch_size: 64
+    target: CharlsonIndex_avg
+    target_val: [0, 1]
+    sensitive: AgeAtFirstClaim
+    sensitive_val: [0, 1]
+    factors: 
+      - AgeAtFirstClaim
+      - CharlsonIndex_avg
+    factor_values:
+      - [0, 1]
+      - [0, 1]
+    value_fractions:
+      - [1, 1]
+      - [1, 1]
+    c_factor: CharlsonIndex_avg
+    c_factor_values:
+      - [[0, 1], [0, 1]]
+      - [[0], [1]]
+    train_path: /home/dnamrata/scratch/data/heritage-health/train_charlson.csv
+  num_workers: 16
+
+model:
+  model_key: fair_rep_cls
+  trainer_key: frep-eq
+  fX:
+    AgeAtFirstClaim: -1
+    CharlsonIndex_avg: 1
+  kernel: gaussian
+  sigma_range: [0.1, 0.5]
+  modes:
+    - train
+    - val
+  epochs: 100
+  alpha: 0.05
+  cls_coeff: 1
+  lamda_t: 0
+  lamda_s: 0
+  var_offset: 0.000001
+  unbiased_variance: False
+  n_permutations: 100
+
+  network:
+    fc:
+      - Linear:
+          in_features: 65
+          out_features: 128
+      - LeakyReLU:
+          inplace: true
+      - Linear:
+          in_features: 128
+          out_features: 64
+      - LeakyReLU:
+          inplace: true
+      - Linear:
+          in_features: 64
+          out_features: 16
+
+    classifier:
+      - Linear:
+          in_features: 16
+          out_features: 16
+      - LeakyReLU:
+          inplace: true
+      - Linear:
+          in_features: 16
+          out_features: 2     
+
+  optimizers:
+    ft:
+      Adam:
+        lr: 0.0001
+        weight_decay: 0.0001
+  
+  scheduler: null

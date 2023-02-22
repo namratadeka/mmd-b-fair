@@ -1,0 +1,66 @@
+experiment:
+  description: laftr compas
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/laftr/compas/
+  load: null
+
+data:
+  data_key: compas-cls
+  args:
+    train: /home/dnamrata/scratch/data/compas/compas_train.csv
+    val: /home/dnamrata/scratch/data/compas/compas_val.csv
+    test: /home/dnamrata/scratch/data/compas/compas_test.csv
+    batch_size: 64
+    target: result
+    sensitive: race
+  num_workers: 16
+
+model:
+  data_key: compas-cls
+  model_key: laftr
+  trainer_key: cfair-laftr
+  num_classes: 2
+  num_groups: 2
+  s_cls: false
+  mu: 100
+  modes:
+    - train
+    - val
+  epochs: 100
+
+  encoder_fc:
+    - Linear:
+        in_features: 11
+        out_features: 8
+    - LeakyReLU:
+        inplace: True
+    - Linear:
+        in_features: 8
+        out_features: 8
+
+  classifier:
+    - Linear:
+        in_features: 8
+        out_features: 8
+    - LeakyReLU:
+        inplace: True
+    - Linear:
+        in_features: 8
+        out_features: 2  
+
+  discriminator:
+    - Linear:
+        in_features: 8
+        out_features: 8
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 8
+        out_features: 1   
+
+  optimizers:
+    opt:
+      Adadelta:
+        lr: 2.0
+        weight_decay: 0.0
+  
+  scheduler: null
