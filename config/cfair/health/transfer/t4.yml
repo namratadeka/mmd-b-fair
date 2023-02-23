@@ -1,0 +1,73 @@
+experiment:
+  description: cfair health T4
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/cfair/health/t4
+  load: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/cfair/health/lambda_1/*/best.pth
+  resume: false
+
+data:
+  data_key: heritage-cls
+  args:
+    train: /home/dnamrata/scratch/data/heritage-health/train_transfer.csv
+    val: /home/dnamrata/scratch/data/heritage-health/val_transfer.csv
+    batch_size: 64
+    target: prim_NEUMENT
+    sensitive: AgeAtFirstClaim
+    og_target: CharlsonIndex_avg
+    train_path: /home/dnamrata/scratch/data/heritage-health/train_transfer.csv
+  num_workers: 16
+
+model:
+  data_key: heritage-cls
+  model_key: cfair
+  trainer_key: cfair-laftr
+  num_classes: 2
+  s_cls: false
+  mu: 0
+  modes:
+    - train
+    - val
+  epochs: 100
+  finetune: true
+
+  encoder_fc:
+    - Linear:
+        in_features: 65
+        out_features: 128
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 128
+        out_features: 64
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 64
+        out_features: 16
+
+  classifier:
+    - Linear:
+        in_features: 16
+        out_features: 16
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 16
+        out_features: 2 
+
+  discriminator:
+    - Linear:
+        in_features: 16
+        out_features: 16
+    - LeakyReLU:
+        inplace: true
+    - Linear:
+        in_features: 16
+        out_features: 2  
+
+  optimizers:
+    opt:
+      Adadelta:
+        lr: 2
+        weight_decay: 0.0
+  
+  scheduler: null
