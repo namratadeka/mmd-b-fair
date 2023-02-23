@@ -8,8 +8,6 @@ from trainer.sipm import sIPMTrainerBuilder
 from trainer.cfair_laftr import CfairLaftrTrainerBuilder
 from trainer.mmd_classifier import MMDClassifierBuilder
 
-# from trainer.dp_9 import DP9TrainerBuilder
-# from trainer.eq_9 import Eq9TrainerBuilder
 
 class TrainerFactory(object):
 
@@ -49,9 +47,6 @@ factory.register_builder("fkernel_dp", FairKernelDPTrainerBuilder())
 factory.register_builder("frep-dp", FRepDPTrainerBuilder())
 # factory.register_builder("fair_kernel_eq", FairKernelEqTrainerBuilder())
 factory.register_builder("frep-eq", FRepEqTrainerBuilder())
-
-# factory.register_builder("dp9", DP9TrainerBuilder())
-# factory.register_builder("eq9", Eq9TrainerBuilder())
 
 # # other methods
 factory.register_builder("sipm", sIPMTrainerBuilder())

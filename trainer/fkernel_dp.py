@@ -206,7 +206,7 @@ class FairKernelDPTrainer(BaseTrainer):
             return loss
 
     def _inference(self, mode):
-        emp_powers = self._epoch(mode, inference=True)
+        emp_powers = self._epoch(epochID=0, mode=mode, inference=True)
         metrics = {}
         for factor in emp_powers:
             if self.model_cfg.fX[factor] == -1:

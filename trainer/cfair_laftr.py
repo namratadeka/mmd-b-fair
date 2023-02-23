@@ -18,9 +18,8 @@ class CfairLaftrTrainer(BaseTrainer):
         if model_cfg.model_key == 'cfair' or model_cfg.model_key == 'cfair-conv':
             self.reweight_tensors()
 
-        if self.model_cfg.s_cls and 'test' not in self.model_cfg.modes:
+        if self.model_cfg.finetune:
             reset_weights(self.model.classifier)
-            assert self.model_cfg.mu == 0
 
     def _setup_optimizers(self):
         params = list(self.model.parameters())
@@ -110,7 +109,7 @@ class CfairLaftrTrainer(BaseTrainer):
                     adv_loss = torch.tensor(0.0)
             
             elif 'cfair' in self.model_cfg.model_key:
-                if not self.model_cfg.s_cls:
+                if not self.model_cfg.finetune:
                     loss = F.nll_loss(ypreds, ts, weight=self.reweight_target_tensor[mode])
                 else:
                     loss = F.nll_loss(ypreds, ts)

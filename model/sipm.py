@@ -43,7 +43,7 @@ class sIPMModel(BaseModel):
         z = self.encoder(x)
         z = torch.flatten(z, start_dim=1)
         z = self.encoder_fc(z)
-        if self.cfg.s_cls:
+        if self.cfg.finetune:
             preds = self.head(z.detach())
         else:
             preds = self.head(z)

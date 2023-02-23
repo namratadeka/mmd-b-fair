@@ -70,7 +70,7 @@ class CFairNet(nn.Module):
             return features
 
         # Classification probabilities
-        if self.model_cfg.s_cls:
+        if self.model_cfg.finetune:
             h_relu = h_relu.detach()
         pre_softmax = self.classifier(h_relu)
         logprobs = F.log_softmax(pre_softmax, dim=1)

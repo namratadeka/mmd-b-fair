@@ -14,9 +14,8 @@ class sIPMTrainer(BaseTrainer):
         super(sIPMTrainer, self).__init__(
             data_cfg=data_cfg, model_cfg=model_cfg, exp_cfg=exp_cfg
         )
-        if self.model_cfg.s_cls and 'test' not in self.model_cfg.modes:
+        if self.model_cfg.finetune:
             reset_weights(self.model.head)
-            assert self.model_cfg.lmdaF == 0
     
     def _setup_optimizers(self):
         params = list(self.model.encoder.parameters()) \

@@ -47,6 +47,11 @@ model:
     head:
       - Linear:
           in_features: 16
+          out_features: 16
+      - LeakyReLU:
+          inplace: True
+      - Linear:
+          in_features: 16
           out_features: 1
         activation: Sigmoid
 
@@ -55,6 +60,11 @@ model:
           args: unused
 
     aud:
+      - Linear:
+          in_features: 16
+          out_features: 16
+      - LeakyReLU:
+          inplace: True
       - Linear:
           in_features: 16
           out_features: 1

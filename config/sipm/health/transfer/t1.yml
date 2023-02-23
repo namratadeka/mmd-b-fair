@@ -1,18 +1,19 @@
 experiment:
-  description: sIPM health
-  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/sipm/health/
-  load: null
+  description: sipm health T1
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/sipm/health/t1
+  load: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/sipm/health/lambda_1000/*/best.pth
+  resume: false
 
 data:
   data_key: heritage-cls
   args:
-    train: /home/dnamrata/scratch/data/heritage-health/train_charlson.csv
-    val: /home/dnamrata/scratch/data/heritage-health/val_charlson.csv
+    train: /home/dnamrata/scratch/data/heritage-health/train_transfer.csv
+    val: /home/dnamrata/scratch/data/heritage-health/val_transfer.csv
     batch_size: 64
-    og_target: CharlsonIndex_avg
-    target: CharlsonIndex_avg
+    target: prim_MSC2a3
     sensitive: AgeAtFirstClaim
-    train_path: /home/dnamrata/scratch/data/heritage-health/train_charlson.csv
+    og_target: CharlsonIndex_avg
+    train_path: /home/dnamrata/scratch/data/heritage-health/train_transfer.csv
   num_workers: 16
 
 model:
@@ -25,8 +26,9 @@ model:
   aud_steps: 2
   lmda: 1
   lmdaR: 0
-  lmdaF: 0.1
+  lmdaF: 0
   s_cls: False
+  finetune: True
 
   network:
     encoder_fc:
@@ -72,9 +74,9 @@ model:
 
   optimizers:
     opt:
-      Adam:
-        lr: 0.0001
-        weight_decay: 0.0001
+      Adadelta:
+        lr: 2
+        weight_decay: 0.0
     fair_opt:
       Adam:
         lr: 0.0001
