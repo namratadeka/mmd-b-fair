@@ -1,0 +1,61 @@
+experiment:
+  description: frep-dp health t1
+  output_location: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp/health/t1/
+  load: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp/health/lambda_100/*/best.pth
+  resume: false
+
+data:
+  data_key: heritage-cls
+  args:
+    train: /home/dnamrata/scratch/data/heritage-health/train_transfer.csv
+    val: /home/dnamrata/scratch/data/heritage-health/val_transfer.csv
+    batch_size: 64
+    target: prim_MSC2a3
+    sensitive: AgeAtFirstClaim
+    og_target: CharlsonIndex_avg
+    train_path: /home/dnamrata/scratch/data/heritage-health/train_transfer.csv
+  num_workers: 16
+
+model:
+  model_key: classifier
+  trainer_key: classifier
+  modes:
+    - train
+    - val
+  epochs: 100
+  finetune: true
+  scls: false
+
+  network:
+    fc:
+      - Linear:
+          in_features: 65
+          out_features: 128
+      - LeakyReLU:
+          inplace: true
+      - Linear:
+          in_features: 128
+          out_features: 64
+      - LeakyReLU:
+          inplace: true
+      - Linear:
+          in_features: 64
+          out_features: 16
+
+    classifier:
+      - Linear:
+          in_features: 16
+          out_features: 16
+      - LeakyReLU:
+          inplace: true
+      - Linear:
+          in_features: 16
+          out_features: 2 
+
+  optimizers:
+    cls:
+      Adadelta:
+        lr: 2
+        weight_decay: 0.0
+  
+  scheduler: null
