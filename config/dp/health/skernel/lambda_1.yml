@@ -1,7 +1,7 @@
 experiment:
   description: finetune fkernel sensitive health
-  output_location: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp/health/skernel/
-  load: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp/health/lambda_1/*/best.pth
+  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/dp/health/skernel/
+  load: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/dp/health/lambda_1/*/best.pth
 
 data:
   data_key: heritage
@@ -43,27 +43,17 @@ model:
   network:
     fc:
       - Linear:
-          in_features: 114
-          out_features: 256
-      - LeakyReLU:
-          inplace: True
-      - Linear:
-          in_features: 256
+          in_features: 65
           out_features: 128
       - LeakyReLU:
-          inplace: True
+          inplace: true
       - Linear:
           in_features: 128
-          out_features: 64 
+          out_features: 64
       - LeakyReLU:
-          inplace: True
+          inplace: true
       - Linear:
           in_features: 64
-          out_features: 32   
-      - LeakyReLU:
-          inplace: True
-      - Linear:
-          in_features: 32
           out_features: 16
     
     kernel_fc:
