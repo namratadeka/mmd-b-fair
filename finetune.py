@@ -39,6 +39,9 @@ if __name__=="__main__":
     parser.add_argument(
         "--start", type=int, default=0, help="starting seed in [0,9]"
     )
+    parser.add_argument(
+        "--end", type=int, default=None, help="ending seed in [0,9]"
+    )
     (args, unknown_args) = parser.parse_known_args()
 
     # Uncomment to provide GPU ID as input argument:
@@ -56,7 +59,7 @@ if __name__=="__main__":
 
     bases = sorted(glob(cfg['exp_cfg'].load))
 
-    for base_path in bases[args.start:]:
+    for base_path in bases[args.start:args.end]:
         print(base_path)
         seed = int(base_path.split('/')[-2])
         cfg["exp_cfg"].load = base_path

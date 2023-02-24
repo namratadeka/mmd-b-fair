@@ -69,8 +69,9 @@ if __name__ == '__main__':
                 for seed in seeds:
                     model_pth = join(model_dir, seed, 'best.pth')
                     print(model_pth)
-                    metrics = pipeline.eval(model_pth)
-                    metrics['lambda'] = float(lmda)
-                    metrics['seed'] = seed
-                    df = pd.DataFrame([metrics])
-                    df.to_csv(outpath, mode='a', header=not exists(outpath))
+                    if exists(model_pth):
+                        metrics = pipeline.eval(model_pth)
+                        metrics['lambda'] = float(lmda)
+                        metrics['seed'] = seed
+                        df = pd.DataFrame([metrics])
+                        df.to_csv(outpath, mode='a', header=not exists(outpath))

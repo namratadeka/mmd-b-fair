@@ -9,7 +9,7 @@ def init_wandb(cfg: dict, seed, mode='online') -> None:
     for key in cfg:
         cfg[key] = cfg[key].__dict__
 
-    wandb.init(project="deep-kernels", name=f'{cfg["exp_cfg"]["run_name"]}/{seed}', 
+    wandb.init(project="mmd-b-fair", name=f'{cfg["exp_cfg"]["run_name"]}/{seed}', 
         notes=cfg["exp_cfg"]["description"], config=cfg, mode=mode)
 
 def log_epoch_summary(epochID:int, mode:str, losses:dict):

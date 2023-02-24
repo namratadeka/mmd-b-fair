@@ -180,7 +180,7 @@ class FairKernelDPTrainer(BaseTrainer):
             total_loss = self.model_cfg.lamda_s * torch.stack(sensitive_objs).mean() \
                        + self.model_cfg.lamda_t * torch.stack(target_objs).mean()
             loss.append(total_loss.item())
-            if mode.__eq__('train') and epochID > 0:
+            if mode.__eq__('train'):
                 self._backprop(total_loss, self.opt)
 
             tqdm_iter.set_description('V: {} | {} | Epoch {}'.format(self.exp_cfg.version, mode, epochID), refresh=True)
