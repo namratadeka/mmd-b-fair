@@ -59,7 +59,6 @@ if __name__ == '__main__':
                 df = pd.DataFrame([metrics])
                 df.to_csv(outpath, mode='a', header=not exists(outpath))
     else:
-        # result_dir = f'/home/dnamrata/scratch/projects/deep-kernels/results/{dirname(args.version)}'
         result_dir = dirname(dirname(cfg['exp_cfg'].output_location))
         lambdas = sorted([x.split('_')[-1] for x in os.listdir(result_dir)])
         for lmda in lambdas:
