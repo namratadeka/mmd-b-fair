@@ -1,7 +1,7 @@
 experiment:
-  description: frep-dp_cls0 adult
+  description: frep-dp_cls0 adult test
   output_location: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp_cls0/adult/tcls/
-  load: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp_cls0/adult/lambda_1/*/best.pth
+  load: null
   resume: false
 
 data:
@@ -22,10 +22,9 @@ model:
   model_key: classifier
   trainer_key: classifier
   modes:
-    - train
-    - val
-  epochs: 100
-  finetune: True
+    - test
+  epochs: 0
+  finetune: False
   scls: False
 
   network:

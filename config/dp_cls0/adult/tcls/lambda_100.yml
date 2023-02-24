@@ -1,7 +1,7 @@
 experiment:
   description: frep-dp_cls0 adult
-  output_location: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/dp_cls0/adult/tcls/
-  load: /project/def-dsuth/dnamrata/projects/mmd-b-fair/results/dp_cls0/adult/lambda_100/*/best.pth
+  output_location: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp_cls0/adult/tcls/
+  load: /home/dnamrata/scratch/projects/mmd-b-fair/results/dp_cls0/adult/lambda_100/*/best.pth
   resume: false
 
 data:
